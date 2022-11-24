@@ -10,12 +10,14 @@ namespace TaoTie
             AllManagers = new LinkedList<object>();
             ManagersMap = new MultiDictionary<Type,string, object>();
             UpdateManagers = new LinkedList<IUpdateManager>();
+            LateUpdateManagers = new LinkedList<ILateUpdateManager>();
         }
         static ManagerProvider Instance { get; } = new ManagerProvider();
         
         MultiDictionary<Type,string, object> ManagersMap;
         private LinkedList<object> AllManagers;
         private LinkedList<IUpdateManager> UpdateManagers;
+        private LinkedList<ILateUpdateManager> LateUpdateManagers;
         public static T GetManager<T>(string name = "") where T :class,IManagerDestroy
         {
             var type = typeof(T);
@@ -35,7 +37,10 @@ namespace TaoTie
                 {
                     Instance.UpdateManagers.AddLast(u);
                 }
-
+                if (res is ILateUpdateManager lu)
+                {
+                    Instance.LateUpdateManagers.AddLast(lu);
+                }
                 (res as T).Init();
                 Instance.ManagersMap.Add(type,name,res);
                 Instance.AllManagers.AddLast(res);
@@ -51,6 +56,10 @@ namespace TaoTie
                 if (res is IUpdateManager u)
                 {
                     Instance.UpdateManagers.AddLast(u);
+                }
+                if (res is ILateUpdateManager lu)
+                {
+                    Instance.LateUpdateManagers.AddLast(lu);
                 }
                 (res as T).Init(p1);
                 Instance.ManagersMap.Add(type,name,res);
@@ -68,6 +77,10 @@ namespace TaoTie
                 {
                     Instance.UpdateManagers.AddLast(u);
                 }
+                if (res is ILateUpdateManager lu)
+                {
+                    Instance.LateUpdateManagers.AddLast(lu);
+                }
                 (res as T).Init(p1,p2);
                 Instance.ManagersMap.Add(type,name,res);
                 Instance.AllManagers.AddLast(res);
@@ -83,6 +96,10 @@ namespace TaoTie
                 if (res is IUpdateManager u)
                 {
                     Instance.UpdateManagers.AddLast(u);
+                }
+                if (res is ILateUpdateManager lu)
+                {
+                    Instance.LateUpdateManagers.AddLast(lu);
                 }
                 (res as T).Init(p1,p2,p3);
                 Instance.ManagersMap.Add(type,name,res);
@@ -100,7 +117,10 @@ namespace TaoTie
                 {
                     Instance.UpdateManagers.Remove(u);
                 }
-                
+                if (res is ILateUpdateManager lu)
+                {
+                    Instance.LateUpdateManagers.Remove(lu);
+                }
                 Instance.ManagersMap.Remove(type,name);
                 Instance.AllManagers.Remove(res);
                 (res as IManagerDestroy)?.Destroy();
@@ -111,7 +131,7 @@ namespace TaoTie
         {
             Instance.ManagersMap.Clear();
             Instance.UpdateManagers.Clear();
-            
+            Instance.LateUpdateManagers.Clear();
             foreach (var item in Instance.AllManagers)
             {
                 (item as IManagerDestroy)?.Destroy();
@@ -123,6 +143,14 @@ namespace TaoTie
             for (var node = Instance.UpdateManagers.First; node !=null; node=node.Next)
             {
                 node.Value.Update();
+            }
+        }
+        
+        public static void LateUpdate()
+        {
+            for (var node = Instance.LateUpdateManagers.First; node !=null; node=node.Next)
+            {
+                node.Value.LateUpdate();
             }
         }
     }

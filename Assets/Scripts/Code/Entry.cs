@@ -28,6 +28,12 @@ namespace TaoTie
                 ManagerProvider.RegisterManager<SceneManager>();
                 
                 ManagerProvider.RegisterManager<ServerConfigManager>();
+
+                ManagerProvider.RegisterManager<OpcodeTypeComponent>();
+                ManagerProvider.RegisterManager<MessageDispatcherComponent>();
+                ManagerProvider.RegisterManager<SessionStreamDispatcher>();
+                ManagerProvider.RegisterManager<NetThreadComponent>();
+                ManagerProvider.RegisterManager<NetKcpComponent,int>(SessionStreamDispatcherType.SessionStreamDispatcherClientOuter);
                 StartGameAsync().Coroutine();
             }
             catch (Exception e)

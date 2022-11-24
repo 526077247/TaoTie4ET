@@ -9,6 +9,7 @@ namespace TaoTie
 		public static string PrefabPath => "UI/UIMain/Prefabs/UIMainView.prefab";
 		public UIImage Image;
 		public UIText Text;
+		public UIButton Button;
 		public UIMenu Menu;
 
 		public UILoopGridView LoopGridView;
@@ -37,6 +38,8 @@ namespace TaoTie
 			this.LoopListView2 = this.AddComponent<UILoopListView2>("ScrollList/LoopList");
 			this.LoopListView2.InitListView(0,OnGetListItemByIndex);
 			Welcome = this.AddComponent<UIEmptyView>("ScrollList/Welcome");
+			Button = this.AddComponent<UIButton>("ScrollList/Welcome/Button");
+			Button.SetOnClick(OnLogin);
 			//模拟读配置
 			List<MenuPara> paras = new List<MenuPara>();
 			foreach (var item in Config)
@@ -56,7 +59,11 @@ namespace TaoTie
 		#endregion
 
 		#region 事件绑定
-		
+
+		public void OnLogin()
+		{
+			LoginHelper.Login("127.0.0.1:10002", "", "").Coroutine();
+		}
 		public void OnMenuIndexChanged(MenuPara para)
 		{
 			CurId = para.Id;

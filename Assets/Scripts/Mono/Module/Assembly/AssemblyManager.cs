@@ -88,5 +88,15 @@ namespace TaoTie
             }
             HotfixTemp.Clear();
         }
+        
+        public Type GetType(string typeName)
+        {
+            if (this.allTypes.TryGetValue(typeName, out var res))
+            {
+                return res;
+            }
+            Log.Error(typeName+" not found");
+            return null;
+        }
     }
 }

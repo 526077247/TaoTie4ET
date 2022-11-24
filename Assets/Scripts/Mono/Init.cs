@@ -72,7 +72,7 @@ namespace TaoTie
 			{
 				Log.Error(e.ExceptionObject.ToString());
 			};
-
+			SynchronizationContext.SetSynchronizationContext(ThreadSynchronizationContext.Instance);
 			DontDestroyOnLoad(gameObject);
 
 			ETTask.ExceptionHandler += Log.Error;
@@ -94,6 +94,7 @@ namespace TaoTie
 		private void Update()
 		{
 			if (!IsInit) return;
+			ThreadSynchronizationContext.Instance.Update();
 			TimeInfo.Instance.Update();
 			CodeLoader.Instance.Update?.Invoke();
 			ManagerProvider.Update();
@@ -118,6 +119,7 @@ namespace TaoTie
 		private void LateUpdate()
 		{
 			CodeLoader.Instance.LateUpdate?.Invoke();
+			ManagerProvider.LateUpdate();
 		}
 
 		private void OnApplicationQuit()
