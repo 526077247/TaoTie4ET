@@ -29,11 +29,6 @@ namespace TaoTie
                 
                 ManagerProvider.RegisterManager<ServerConfigManager>();
 
-                ManagerProvider.RegisterManager<OpcodeTypeComponent>();
-                ManagerProvider.RegisterManager<MessageDispatcherComponent>();
-                ManagerProvider.RegisterManager<SessionStreamDispatcher>();
-                ManagerProvider.RegisterManager<NetThreadComponent>();
-                ManagerProvider.RegisterManager<NetKcpComponent,int>(SessionStreamDispatcherType.SessionStreamDispatcherClientOuter);
                 StartGameAsync().Coroutine();
             }
             catch (Exception e)
@@ -51,6 +46,13 @@ namespace TaoTie
 
         static void StartGame()
         {
+            
+            ManagerProvider.RegisterManager<OpcodeTypeComponent>();
+            ManagerProvider.RegisterManager<MessageDispatcherComponent>();
+            ManagerProvider.RegisterManager<SessionStreamDispatcher>();
+            ManagerProvider.RegisterManager<NetThreadComponent>();
+            ManagerProvider.RegisterManager<NetKcpComponent,int>(SessionStreamDispatcherType.SessionStreamDispatcherClientOuter);
+            ManagerProvider.RegisterManager<SessionComponent>();
             SceneManager.Instance.SwitchScene<LoginScene>().Coroutine();
         }
     }

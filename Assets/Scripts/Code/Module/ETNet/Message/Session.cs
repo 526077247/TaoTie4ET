@@ -21,6 +21,7 @@ namespace TaoTie
     
     public sealed class Session: IManager<AService,long>,IDisposable
     {
+        public long GateId;
         public AService AService;
         public long Id;
         public bool IsDisposed;
@@ -88,7 +89,6 @@ namespace TaoTie
             if(IsDisposed) return;
             IsDisposed = true;
             ManagerProvider.RemoveManager<PingComponent>(Id.ToString());
-            ManagerProvider.RemoveManager<RouterDataComponent>(Id.ToString());
             ManagerProvider.RemoveManager<SwitchRouterComponent>(Id.ToString());
             ManagerProvider.RemoveManager<SessionIdleCheckerComponent>(Id.ToString());
             ManagerProvider.RemoveManager<SessionAcceptTimeoutComponent>(Id.ToString());

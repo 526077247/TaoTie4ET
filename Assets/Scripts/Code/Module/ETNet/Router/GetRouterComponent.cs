@@ -56,17 +56,12 @@ namespace TaoTie
         }
 
         /// <summary>
-        /// 应从cdn获取.此处临时写假的
+        /// 应从cdn获取
         /// </summary>
         /// <returns></returns>
-        static async ETTask<string[]> GetRouterListFake()
+        static async ETTask<string[]> GetRouterList()
         {
-#if !NOT_UNITY
             return await HttpManager.Instance.HttpGetResult<string[]>(ServerConfigManager.Instance.GetCurConfig().RouterListUrl+ "/router.list");
-#else
-            await ETTask.CompletedTask;
-            return new string[]{"172.22.213.58:10007", "172.22.213.58:10008", "172.22.213.58:10009", };
-#endif
         }
         private async ETTask SynAsync(long gateid, long channelid)
         {
@@ -75,7 +70,7 @@ namespace TaoTie
             //value是对应gate的scene.
             var insid = new InstanceIdStruct(gateid);
             uint localConn = (uint)((ulong)channelid & uint.MaxValue);
-            var routerlist = await GetRouterListFake();
+            var routerlist = await GetRouterList();
             if (routerlist == null)
             {
                 var tcs = this.Tcs;

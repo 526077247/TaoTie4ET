@@ -25,7 +25,7 @@ namespace TaoTie
                 }
 
                 long channelId = RandomHelper.RandInt64();
-                var routercomponent =ManagerProvider.RegisterManager<GetRouterComponent, long, long>(r2CLogin.GateId, channelId);
+                var routercomponent = ManagerProvider.RegisterManager<GetRouterComponent, long, long>(r2CLogin.GateId, channelId);
                 string routerAddress = await routercomponent.Tcs;
                 if (routerAddress == "")
                 {
@@ -35,11 +35,10 @@ namespace TaoTie
                 Log.Debug("routerAddress 获取成功:" + routerAddress);
                 ManagerProvider.RemoveManager<GetRouterComponent>();
                 // 创建一个gate Session,并且保存到SessionComponent中
-                Session gateSession = ManagerProvider.GetManager<NetKcpComponent>().Create(channelId, NetworkHelper.ToIPEndPoint(routerAddress));
-                ManagerProvider.RegisterManager<RouterDataComponent>(gateSession.Id.ToString()).Gateid = r2CLogin.GateId;
+                Session gateSession = ManagerProvider.GetManager<NetKcpComponent>().Create(channelId,r2CLogin.GateId, NetworkHelper.ToIPEndPoint(routerAddress));
                 ManagerProvider.RegisterManager<PingComponent, Session>(gateSession, gateSession.Id.ToString());
 
-                ManagerProvider.RegisterManager<SessionComponent>().Session = gateSession;
+                SessionComponent.Instance.Session = gateSession;
 				
                 G2C_LoginGate g2CLoginGate = (G2C_LoginGate)await gateSession.Call(
                     new C2G_LoginGate() { Key = r2CLogin.Key, GateId = r2CLogin.GateId});

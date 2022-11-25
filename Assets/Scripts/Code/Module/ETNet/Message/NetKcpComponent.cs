@@ -102,10 +102,11 @@ namespace TaoTie
         /// <param name="channelId"></param>
         /// <param name="realIPEndPoint"></param>
         /// <returns></returns>
-        public Session Create(long channelId, IPEndPoint realIPEndPoint)
+        public Session Create(long channelId,long gateId, IPEndPoint realIPEndPoint)
         {
             Session session = this.AddChildWithId(channelId, this.Service);
             session.RemoteAddress = realIPEndPoint;
+            session.GateId = gateId;
             ManagerProvider.RegisterManager<SessionIdleCheckerComponent, Session, int>(session,
                 NetThreadComponent.checkInteral);
             this.Service.GetOrCreate(session.Id, realIPEndPoint);

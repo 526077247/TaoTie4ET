@@ -12,7 +12,8 @@
         public void Destroy()
         {
             Instance = null;
-            Session.Dispose();
+            Session?.Dispose();
+            Session = null;
         }
     }
 }

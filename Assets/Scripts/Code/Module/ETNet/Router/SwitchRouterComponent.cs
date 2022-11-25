@@ -5,22 +5,6 @@ using System.Linq;
 namespace TaoTie
 {
     /// <summary>
-    /// 在session上挂载的保存路由信息的组件.切换路由用
-    /// </summary>
-    public class RouterDataComponent : IManager
-    {
-        public long Gateid;
-        public void Init()
-        {
-            
-        }
-
-        public void Destroy()
-        {
-            
-        }
-    }
-    /// <summary>
     /// 切换路由组件
     /// </summary>
     public class SwitchRouterComponent : IManager<Session>
@@ -40,7 +24,7 @@ namespace TaoTie
         public async ETTask ChangeRouter()
         {
             ManagerProvider.RemoveManager<SessionIdleCheckerComponent>();
-            var gateid = ManagerProvider.GetManager<RouterDataComponent>(Session.Id.ToString()).Gateid;
+            var gateid = Session.GateId;
 
             var routercomponent = ManagerProvider.RegisterManager<GetRouterComponent, long, long>(gateid, Session.Id,Session.Id.ToString());
             string routerAddress = await routercomponent.Tcs;

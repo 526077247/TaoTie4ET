@@ -25,11 +25,10 @@ namespace TaoTie
         
         private async ETTask PingAsync()
         {
-            Session session = Session;
 
             while (true)
             {
-                if (session.IsDisposed)
+                if (Session==null||Session.IsDisposed)
                 {
                     return;
                 }
@@ -37,9 +36,9 @@ namespace TaoTie
                 long time1 = TimeHelper.ClientNow();
                 try
                 {
-                    G2C_Ping response = await session.Call(this.C2G_Ping) as G2C_Ping;
+                    G2C_Ping response = await Session.Call(this.C2G_Ping) as G2C_Ping;
 
-                    if (session.IsDisposed)
+                    if (Session == null || Session.IsDisposed)
                     {
                         return;
                     }
