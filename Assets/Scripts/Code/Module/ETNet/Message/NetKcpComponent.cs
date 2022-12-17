@@ -71,10 +71,10 @@ namespace TaoTie
             session.RemoteAddress = ipEndPoint;
            
             // 挂上这个组件，5秒就会删除session，所以客户端验证完成要删除这个组件。该组件的作用就是防止外挂一直连接不发消息也不进行权限验证
-            ManagerProvider.RegisterManager<SessionAcceptTimeoutComponent, Session>(session);
+            ManagerProvider.RegisterManager<SessionAcceptTimeoutComponent, Session>(session,session.Id.ToString());
             // 客户端连接，2秒检查一次recv消息，10秒没有消息则断开
             ManagerProvider.RegisterManager<SessionIdleCheckerComponent, Session, int>(session,
-                NetThreadComponent.checkInteral);
+                NetThreadComponent.checkInteral,session.Id.ToString());
         }
 
         public Session Get(long id)
@@ -89,7 +89,7 @@ namespace TaoTie
             Session session = this.AddChildWithId(channelId, this.Service);
             session.RemoteAddress = realIPEndPoint;
             ManagerProvider.RegisterManager<SessionIdleCheckerComponent, Session, int>(session,
-                NetThreadComponent.checkInteral);
+                NetThreadComponent.checkInteral,session.Id.ToString());
             
             this.Service.GetOrCreate(session.Id, realIPEndPoint);
 
@@ -108,7 +108,7 @@ namespace TaoTie
             session.RemoteAddress = realIPEndPoint;
             session.GateId = gateId;
             ManagerProvider.RegisterManager<SessionIdleCheckerComponent, Session, int>(session,
-                NetThreadComponent.checkInteral);
+                NetThreadComponent.checkInteral,session.Id.ToString());
             this.Service.GetOrCreate(session.Id, realIPEndPoint);
             return session;
         }

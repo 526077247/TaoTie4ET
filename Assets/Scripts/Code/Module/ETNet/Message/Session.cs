@@ -59,6 +59,7 @@ namespace TaoTie
 
         public void Init(AService aService,long id)
         {
+            IsDisposed = false;
             Id = id;
             this.AService = aService;
             long timeNow = TimeHelper.ClientNow();
@@ -72,6 +73,14 @@ namespace TaoTie
 
         public void Destroy()
         {
+            if(IsDisposed) return;
+            IsDisposed = true;
+            
+            ManagerProvider.RemoveManager<PingComponent>(Id.ToString());
+            ManagerProvider.RemoveManager<SwitchRouterComponent>(Id.ToString());
+            ManagerProvider.RemoveManager<SessionIdleCheckerComponent>(Id.ToString());
+            ManagerProvider.RemoveManager<SessionAcceptTimeoutComponent>(Id.ToString());
+            
             this.AService.RemoveChannel(this.Id);
             
             foreach (RpcInfo responseCallback in this.requestCallbacks.Values.ToArray())
@@ -86,12 +95,7 @@ namespace TaoTie
 
         public void Dispose()
         {
-            if(IsDisposed) return;
-            IsDisposed = true;
-            ManagerProvider.RemoveManager<PingComponent>(Id.ToString());
-            ManagerProvider.RemoveManager<SwitchRouterComponent>(Id.ToString());
-            ManagerProvider.RemoveManager<SessionIdleCheckerComponent>(Id.ToString());
-            ManagerProvider.RemoveManager<SessionAcceptTimeoutComponent>(Id.ToString());
+            ManagerProvider.RemoveManager<Session>(this.Id.ToString());
         }
 
         public void OnRead(ushort opcode, IResponse response)

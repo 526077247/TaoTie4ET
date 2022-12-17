@@ -23,7 +23,7 @@ namespace TaoTie
 
         public async ETTask ChangeRouter()
         {
-            ManagerProvider.RemoveManager<SessionIdleCheckerComponent>();
+            ManagerProvider.RemoveManager<SessionIdleCheckerComponent>(Session.Id.ToString());
             var gateid = Session.GateId;
 
             var routercomponent = ManagerProvider.RegisterManager<GetRouterComponent, long, long>(gateid, Session.Id,Session.Id.ToString());
