@@ -81,16 +81,6 @@ namespace TaoTie
             return ParentTransform;
         }
 
-        public int GetLength()
-        {
-            return length;
-        }
-
-        public void SetLength(int length)
-        {
-            this.length = length;
-        }
-
         void AfterOnEnable()
         {
             Walk((component) =>
@@ -132,7 +122,7 @@ namespace TaoTie
             }
 
             length--;
-            if (this.GetLength() <= 0)
+            if (this.length <= 0)
             {
                 if (!string.IsNullOrEmpty(path))
                     this.Parent.InnerRemoveComponent(this, path);
@@ -179,13 +169,13 @@ namespace TaoTie
         /// <param name="name">游戏物体名称</param>
         public T AddComponentNotCreate<T>(string name) where T : UIBaseContainer
         {
-            Type type = typeof(T);
+            Type type = TypeInfo<T>.Type;
             T component_inst = Activator.CreateInstance<T>();
             ;
             component_inst.path = name;
             component_inst.Parent = this;
             this.RecordUIComponent(name, type, component_inst);
-            this.SetLength(this.GetLength() + 1);
+            length++;
             return component_inst;
         }
 
@@ -196,7 +186,7 @@ namespace TaoTie
         /// <param name="path">路径</param>
         public T AddComponent<T>(string path = "") where T : UIBaseContainer
         {
-            Type type = typeof(T);
+            Type type = TypeInfo<T>.Type;
             T component_inst = Activator.CreateInstance<T>();
             component_inst.path = path;
             component_inst.Parent = this;
@@ -205,7 +195,7 @@ namespace TaoTie
             if (component_inst is II18N i18n)
                 I18NManager.Instance.RegisterI18NEntity(i18n);
             this.RecordUIComponent(path, type, component_inst);
-            this.SetLength(this.GetLength() + 1);
+            length++;
             return component_inst;
         }
 
@@ -216,7 +206,7 @@ namespace TaoTie
         /// <param name="path">相对路径</param>
         public T AddComponent<T, A>(string path, A a) where T : UIBaseContainer, IOnCreate<A>
         {
-            Type type = typeof(T);
+            Type type = TypeInfo<T>.Type;
             T component_inst = Activator.CreateInstance<T>();
             ;
             component_inst.path = path;
@@ -225,7 +215,7 @@ namespace TaoTie
             if (component_inst is II18N i18n)
                 I18NManager.Instance.RegisterI18NEntity(i18n);
             this.RecordUIComponent(path, type, component_inst);
-            this.SetLength(this.GetLength() + 1);
+            length++;
             return component_inst;
         }
 
@@ -236,7 +226,7 @@ namespace TaoTie
         /// <param name="path">路径</param>
         public T AddComponent<T, A, B>(string path, A a, B b) where T : UIBaseContainer, IOnCreate<A, B>
         {
-            Type type = typeof(T);
+            Type type = TypeInfo<T>.Type;
             T component_inst = Activator.CreateInstance<T>();
             ;
             component_inst.path = path;
@@ -245,7 +235,7 @@ namespace TaoTie
             if (component_inst is II18N i18n)
                 I18NManager.Instance.RegisterI18NEntity(i18n);
             this.RecordUIComponent(path, type, component_inst);
-            this.SetLength(this.GetLength() + 1);
+            length++;
             return component_inst;
         }
 
@@ -256,7 +246,7 @@ namespace TaoTie
         /// <param name="path">路径</param>
         public T AddComponent<T, A, B, C>(string path, A a, B b, C c) where T : UIBaseContainer, IOnCreate<A, B, C>
         {
-            Type type = typeof(T);
+            Type type = TypeInfo<T>.Type;
             T component_inst = Activator.CreateInstance<T>();
             ;
             component_inst.path = path;
@@ -265,7 +255,7 @@ namespace TaoTie
             if (component_inst is II18N i18n)
                 I18NManager.Instance.RegisterI18NEntity(i18n);
             this.RecordUIComponent(path, type, component_inst);
-            this.SetLength(this.GetLength() + 1);
+            length++;
             return component_inst;
         }
 
@@ -365,7 +355,7 @@ namespace TaoTie
         public T GetComponent<T>(string path = "") where T : UIBaseContainer
         {
             if (components == null) return null;
-            Type type = typeof(T);
+            Type type = TypeInfo<T>.Type;
             if (this.components.TryGetValue(path, type, out var component))
             {
                 return component as T;
@@ -388,7 +378,7 @@ namespace TaoTie
                 if (component is II18N i18n)
                     I18NManager.Instance.RemoveI18NEntity(i18n);
                 (component as IOnDestroy)?.OnDestroy();
-                this.components.Remove(path, typeof(T));
+                this.components.Remove(path, TypeInfo<T>.Type);
             }
         }
 
@@ -402,7 +392,7 @@ namespace TaoTie
             if (component != null)
             {
                 this.components.Remove(path, component.GetType());
-                this.SetLength(this.GetLength() - 1);
+                length--;
             }
         }
     }
