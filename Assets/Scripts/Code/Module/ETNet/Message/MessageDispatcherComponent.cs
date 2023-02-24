@@ -33,7 +33,7 @@ namespace TaoTie
         {
             this.Handlers.Clear();
 
-            List<Type> types = AttributeManager.Instance.GetTypes(typeof (MessageHandlerAttribute));
+            List<Type> types = AttributeManager.Instance.GetTypes(TypeInfo<MessageHandlerAttribute>.Type);
 
             foreach (Type type in types)
             {

@@ -25,11 +25,11 @@ namespace TaoTie
         {
             this.Dispatchers = new ISessionStreamDispatcher[100];
             
-            List<Type> types = AttributeManager.Instance.GetTypes(typeof (SessionStreamDispatcherAttribute));
+            List<Type> types = AttributeManager.Instance.GetTypes(TypeInfo<SessionStreamDispatcherAttribute>.Type);
 
             foreach (Type type in types)
             {
-                object[] attrs = type.GetCustomAttributes(typeof (SessionStreamDispatcherAttribute), false);
+                object[] attrs = type.GetCustomAttributes(TypeInfo<SessionStreamDispatcherAttribute>.Type, false);
                 if (attrs.Length == 0)
                 {
                     continue;

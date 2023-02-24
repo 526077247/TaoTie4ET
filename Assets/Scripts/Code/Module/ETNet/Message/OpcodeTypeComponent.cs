@@ -23,10 +23,10 @@ namespace TaoTie
                 this.typeOpcodes.Clear();
                 this.requestResponse.Clear();
 
-                List<Type> types = AttributeManager.Instance.GetTypes(typeof (MessageAttribute));
+                List<Type> types = AttributeManager.Instance.GetTypes(TypeInfo<MessageAttribute>.Type);
                 foreach (Type type in types)
                 {
-                    object[] attrs = type.GetCustomAttributes(typeof (MessageAttribute), false);
+                    object[] attrs = type.GetCustomAttributes(TypeInfo<MessageAttribute>.Type, false);
                     if (attrs.Length == 0)
                     {
                         continue;
@@ -42,21 +42,21 @@ namespace TaoTie
                     this.opcodeTypes.Add(messageAttribute.Opcode, type);
                     this.typeOpcodes.Add(type, messageAttribute.Opcode);
 
-                    if (OpcodeHelper.IsOuterMessage(messageAttribute.Opcode) && typeof (IActorMessage).IsAssignableFrom(type))
+                    if (OpcodeHelper.IsOuterMessage(messageAttribute.Opcode) && TypeInfo<IActorMessage>.Type.IsAssignableFrom(type))
                     {
                         this.outrActorMessage.Add(messageAttribute.Opcode);
                     }
                 
                     // 检查request response
-                    if (typeof (IRequest).IsAssignableFrom(type))
+                    if (TypeInfo<IRequest>.Type.IsAssignableFrom(type))
                     {
-                        if (typeof (IActorLocationMessage).IsAssignableFrom(type))
+                        if (TypeInfo<IActorLocationMessage>.Type.IsAssignableFrom(type))
                         {
-                            this.requestResponse.Add(type, typeof(ActorResponse));
+                            this.requestResponse.Add(type, TypeInfo<ActorResponse>.Type);
                             continue;
                         }
                     
-                        attrs = type.GetCustomAttributes(typeof (ResponseTypeAttribute), false);
+                        attrs = type.GetCustomAttributes(TypeInfo<ResponseTypeAttribute>.Type, false);
                         if (attrs.Length == 0)
                         {
                             Log.Error($"not found responseType: {type}");
