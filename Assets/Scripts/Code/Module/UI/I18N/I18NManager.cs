@@ -32,14 +32,25 @@ namespace TaoTie
                 this.CurLangType = (LangType)lang;
             }
             this.i18nTextKeyDic = new Dictionary<string, string>();
-            var res = ConfigManager.Instance.LoadOneConfig<I18NConfigCategory>(this.CurLangType.ToString());
+            var res = I18NConfigCategory.Instance;
             for (int i = 0; i <res.GetAllList().Count; i++)
             {
                 var item = res.GetAllList()[i];
-                this.i18nTextKeyDic.Add(item.Key, item.Value);
+                switch (this.CurLangType)
+                {
+                    case LangType.Chinese:
+                        this.i18nTextKeyDic.Add(item.Key, item.Chinese);
+                        break;
+                    case LangType.English:
+                        this.i18nTextKeyDic.Add(item.Key, item.English);
+                        break;
+                    default:
+                        this.i18nTextKeyDic.Add(item.Key, item.Chinese);
+                        break;
+                }
             }
             
-            //AddSystemFonts();
+            // AddSystemFonts();
         }
 
         public void Destroy()
@@ -118,11 +129,22 @@ namespace TaoTie
             PlayerPrefs.SetInt(CacheKeys.CurLangType, langType);
             this.CurLangType = (LangType)langType;
             this.i18nTextKeyDic.Clear();
-            var res = ConfigManager.Instance.LoadOneConfig<I18NConfigCategory>(this.CurLangType.ToString());
+            var res = I18NConfigCategory.Instance;
             for (int i = 0; i <res.GetAllList().Count; i++)
             {
                 var item = res.GetAllList()[i];
-                this.i18nTextKeyDic.Add(item.Key, item.Value);
+                switch (this.CurLangType)
+                {
+                    case LangType.Chinese:
+                        this.i18nTextKeyDic.Add(item.Key, item.Chinese);
+                        break;
+                    case LangType.English:
+                        this.i18nTextKeyDic.Add(item.Key, item.English);
+                        break;
+                    default:
+                        this.i18nTextKeyDic.Add(item.Key, item.Chinese);
+                        break;
+                }
             }
 
             I18NBridge.Instance.OnLanguageChangeEvt?.Invoke();

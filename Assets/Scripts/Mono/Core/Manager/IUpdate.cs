@@ -5,7 +5,7 @@
         public void Update();
     }
     
-    public interface ILateUpdateManager:IManager
+    public interface ILateUpdate
     {
         public void LateUpdate();
     }

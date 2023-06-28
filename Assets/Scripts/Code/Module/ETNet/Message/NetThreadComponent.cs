@@ -6,7 +6,7 @@ using System.Threading;
 namespace TaoTie
 {
 
-    public class NetThreadComponent: ILateUpdateManager
+    public class NetThreadComponent: ILateUpdate,IManager
     {
         public static NetThreadComponent Instance { get; private set; }
         

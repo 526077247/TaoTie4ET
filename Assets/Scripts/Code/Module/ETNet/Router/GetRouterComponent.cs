@@ -7,7 +7,7 @@ namespace TaoTie
     /// <summary>
     /// 初始获取路由组件
     /// </summary>
-    public class GetRouterComponent :IManager<long,long>,IUpdateManager
+    public class GetRouterComponent :IManager<long,long>,IUpdate
     {
         public int ChangeTimes;
         public Socket socket;
